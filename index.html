@@ -52,13 +52,13 @@
   <main class="app">
     <header>
       <div class="logo" aria-hidden="true">✦</div>
-      <div><h1>Company Handbook Assistant</h1><p class="subtitle">Ask a question about company policies and procedures</p></div>
+      <div><h1 id="chat-title">Company Handbook Assistant</h1><p class="subtitle">Ask a question about company policies and procedures</p></div>
       <div class="status"><span class="dot"></span> Assistant ready</div>
     </header>
     <section class="messages" id="messages" aria-live="polite">
       <div class="welcome" id="welcome">
         <div class="welcome-icon">💬</div>
-        <h2>How can I help you?</h2>
+        <h2 id="welcome-message">How can I help you?</h2>
         <p>Ask me about the company handbook. I’ll look for an answer using the connected workflow.</p>
         <div class="suggestions">
           <button class="suggestion" type="button">What is the leave policy?</button>
@@ -77,11 +77,24 @@
   </main>
 <script>
   // Endpoint priority: value saved from settings.html, then config.js default.
-  const WEBHOOK_URL = (localStorage.getItem('companyHandbookWebhookUrl') || window.CHATBOT_CONFIG?.webhookUrl || '').trim();
+  const CONFIG = window.CHATBOT_CONFIG || {};
+  const WEBHOOK_URL = (localStorage.getItem('companyHandbookWebhookUrl') || CONFIG.webhookUrl || '').trim();
+  const REQUEST_METHOD = (CONFIG.method || 'POST').toUpperCase();
+  const INPUT_FIELD = (CONFIG.inputField || 'message').trim();
+  const REPLY_FIELD = (CONFIG.replyField || 'Response').trim();
+  document.title = CONFIG.title || document.title;
+  document.getElementById('chat-title').textContent = CONFIG.title || 'Chatbot';
+  document.getElementById('welcome-message').textContent = CONFIG.welcomeMsg || 'How can I help you?';
+
+  function inputPlaceholder() {
+    input.placeholder = CONFIG.placeholder || 'Write your question…';
+    input.setAttribute('aria-label', CONFIG.placeholder || 'Your question');
+  }
   const messages = document.getElementById('messages');
   const form = document.getElementById('chat-form');
   const input = document.getElementById('question');
   const sendButton = document.getElementById('send');
+  inputPlaceholder();
   let welcome = document.getElementById('welcome');
 
   function addMessage(text, role, extraClass = '') {
@@ -103,7 +116,8 @@
   }
   function extractAnswer(data) {
     let answer = data;
-    if (data && typeof data === 'object' && 'Response' in data) answer = data.Response;
+    if (data && typeof data === 'object' && REPLY_FIELD in data) answer = data[REPLY_FIELD];
+    else if (data && typeof data === 'object' && 'Response' in data) answer = data.Response;
     else if (data && typeof data === 'object' && 'response' in data) answer = data.response;
     else if (data && typeof data === 'object' && 'output' in data) answer = data.output;
     if (typeof answer === 'string') {
@@ -123,10 +137,9 @@
     try {
       if (!WEBHOOK_URL) throw new Error('Webhook endpoint is not configured. Open settings.html and save your n8n endpoint.');
       const response = await fetch(WEBHOOK_URL, {
-        method: 'POST',
+        method: REQUEST_METHOD,
         headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-        // Keep chatInput as the common n8n chat field; message/query are included for easy compatibility.
-        body: JSON.stringify({ chatInput: question, message: question, query: question })
+        body: JSON.stringify({ [INPUT_FIELD]: question })
       });
       const raw = await response.text();
       if (!response.ok) throw new Error(`Webhook returned HTTP ${response.status}. ${raw.slice(0, 220)}`);
