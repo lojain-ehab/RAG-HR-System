@@ -3,161 +3,80 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Company Handbook Assistant</title>
-  <script src="config.js"></script>
+  <meta name="theme-color" content="#0b1020" />
+  <title>HR System | Home</title>
   <style>
-    :root { color-scheme: dark; --bg:#0b1020; --panel:#111a2e; --panel2:#17233b; --text:#edf3ff; --muted:#9baac5; --accent:#8b7cff; --accent2:#5eead4; --line:rgba(255,255,255,.09); }
-    * { box-sizing:border-box; }
-    body { margin:0; min-height:100vh; display:grid; place-items:center; padding:22px; background:radial-gradient(ellipse at 15% 0%, #22234e 0, transparent 42%),radial-gradient(ellipse at 100% 100%, #103d46 0, transparent 35%),var(--bg); color:var(--text); font:15px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
-    .app { width:min(860px,100%); height:min(780px,calc(100vh - 44px)); min-height:520px; display:flex; flex-direction:column; overflow:hidden; border:1px solid var(--line); border-radius:24px; background:rgba(17,26,46,.92); box-shadow:0 28px 90px rgba(0,0,0,.38); backdrop-filter:blur(18px); }
-    header { display:flex; align-items:center; gap:14px; padding:22px 24px; border-bottom:1px solid var(--line); }
-    .logo { width:46px;height:46px;display:grid;place-items:center;border-radius:15px;background:linear-gradient(135deg,var(--accent),#4c9dff);font-size:22px;box-shadow:0 8px 25px #6f63ff38; }
-    h1 { font-size:17px; margin:0 0 3px; letter-spacing:-.3px; }
-    .subtitle { margin:0; color:var(--muted); font-size:13px; }
-    .status { margin-left:auto; display:flex;align-items:center;gap:7px;color:#a7f3d0;font-size:12px;white-space:nowrap; }
-    .dot { width:7px;height:7px;border-radius:50%;background:#34d399;box-shadow:0 0 12px #34d39988; }
-    .messages { flex:1; overflow-y:auto; padding:28px clamp(16px,4vw,34px); display:flex; flex-direction:column; gap:18px; scroll-behavior:smooth; }
-    .welcome { margin:auto 0; text-align:center; padding:20px 10px 30px; }
-    .welcome-icon { font-size:36px; margin-bottom:10px; }
-    .welcome h2 { margin:0 0 8px; font-size:clamp(22px,4vw,29px); letter-spacing:-.8px; }
-    .welcome p { margin:0 auto 22px; max-width:440px; color:var(--muted); }
-    .suggestions { display:flex; flex-wrap:wrap; justify-content:center; gap:9px; }
-    .suggestion { border:1px solid var(--line); background:#ffffff06; color:#d9e3f8; border-radius:999px; padding:9px 13px; cursor:pointer; font:inherit; font-size:12px; transition:.18s; }
-    .suggestion:hover { background:#8b7cff20; border-color:#8b7cff88; }
-    .message { display:flex; gap:10px; align-items:flex-start; max-width:88%; animation:appear .2s ease-out; }
-    .message.user { align-self:flex-end; flex-direction:row-reverse; }
-    .avatar { flex:0 0 30px;width:30px;height:30px;display:grid;place-items:center;border-radius:10px;background:var(--panel2);font-size:14px; }
-    .user .avatar { background:linear-gradient(135deg,var(--accent),#4c9dff); }
-    .bubble { padding:12px 15px; border:1px solid var(--line); border-radius:5px 16px 16px 16px; background:#ffffff07; white-space:pre-wrap; overflow-wrap:anywhere; }
-    .user .bubble { border:0; border-radius:16px 5px 16px 16px; background:linear-gradient(135deg,#6d5ce7,#4f77d7); color:white; }
-    .thinking-label { display:block; color:var(--muted); font-size:13px; margin-bottom:3px; }
-    .typing { display:flex;gap:5px;padding:5px 0; }
-    .typing span { width:6px;height:6px;border-radius:50%;background:#a5b4fc;animation:bounce 1s infinite ease-in-out; }
-    .typing span:nth-child(2){animation-delay:.15s}.typing span:nth-child(3){animation-delay:.3s}
-    .composer-wrap { padding:15px clamp(14px,3vw,24px) 18px; border-top:1px solid var(--line); background:#0d1527a8; }
-    form { display:flex;gap:10px;align-items:flex-end;padding:8px 8px 8px 16px;border:1px solid #ffffff18;background:#0a1120;border-radius:17px;transition:border-color .2s; }
-    form:focus-within { border-color:#8b7cff99; }
-    textarea { flex:1;resize:none;max-height:130px;min-height:28px;border:0;outline:0;background:transparent;color:var(--text);font:inherit;line-height:1.5;padding:4px 0; }
-    textarea::placeholder { color:#71809d; }
-    .send { width:42px;height:42px;flex:0 0 42px;border:0;border-radius:12px;background:linear-gradient(135deg,var(--accent),#5c83ed);color:white;cursor:pointer;font-size:18px;transition:transform .15s,opacity .15s; }
-    .send:hover { transform:translateY(-1px); }.send:disabled { opacity:.45;cursor:not-allowed;transform:none; }
-    .footnote { text-align:center;color:#73819b;font-size:11px;margin:10px 0 0; }
-    .error { color:#fecaca; }
-    @keyframes bounce { 0%,60%,100%{transform:translateY(0);opacity:.55}30%{transform:translateY(-4px);opacity:1} }
-    @keyframes appear { from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)} }
-    @media(max-width:520px){body{padding:0}.app{height:100dvh;min-height:0;border-radius:0;border:0}.status{font-size:0}.status .dot{width:8px;height:8px}header{padding:17px}.messages{padding:20px 14px}.message{max-width:96%}.welcome{padding-bottom:15px}}
+    :root{color-scheme:dark;--bg:#0b1020;--panel:rgba(17,26,46,.92);--panel2:#17233b;--text:#edf3ff;--muted:#9baac5;--accent:#8b7cff;--accent2:#5eead4;--line:rgba(255,255,255,.1)}
+    *{box-sizing:border-box}
+    body{margin:0;min-height:100vh;padding:24px;display:grid;place-items:center;background:radial-gradient(ellipse at 15% 0%,#22234e 0,transparent 42%),radial-gradient(ellipse at 100% 100%,#103d46 0,transparent 35%),var(--bg);color:var(--text);font:15px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+    .shell{width:min(980px,100%)}
+    .topbar{display:flex;align-items:center;gap:13px;margin-bottom:28px}
+    .logo{width:48px;height:48px;display:grid;place-items:center;border-radius:16px;background:linear-gradient(135deg,var(--accent),#4c9dff);font-size:23px;box-shadow:0 8px 25px #6f63ff38}
+    .brand h1{font-size:17px;margin:0 0 2px;letter-spacing:-.3px}.brand p{margin:0;color:var(--muted);font-size:13px}
+    .status{margin-left:auto;display:flex;align-items:center;gap:8px;color:#a7f3d0;font-size:12px}.dot{width:7px;height:7px;border-radius:50%;background:#34d399;box-shadow:0 0 12px #34d39988}
+    .hero{text-align:center;padding:clamp(28px,6vw,64px) 18px 32px}.eyebrow{display:inline-flex;align-items:center;gap:8px;padding:7px 12px;border:1px solid var(--line);border-radius:999px;background:#ffffff06;color:#c7d2fe;font-size:12px;margin-bottom:20px}
+    .hero h2{font-size:clamp(32px,6vw,52px);line-height:1.08;letter-spacing:-1.7px;margin:0 auto 16px;max-width:700px}.hero h2 span{background:linear-gradient(100deg,#b4a9ff,#72e6dc);-webkit-background-clip:text;background-clip:text;color:transparent}.hero p{color:var(--muted);font-size:clamp(14px,2vw,16px);max-width:560px;margin:0 auto}
+    .cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin:18px auto 0;max-width:800px}
+    .card{display:flex;flex-direction:column;align-items:flex-start;min-height:260px;padding:clamp(22px,4vw,32px);border:1px solid var(--line);border-radius:24px;background:var(--panel);box-shadow:0 24px 70px #0003;backdrop-filter:blur(18px);transition:transform .18s,border-color .18s,background .18s}
+    .card:hover{transform:translateY(-3px);border-color:#8b7cff66;background:rgba(23,35,59,.96)}
+    .card-icon{width:54px;height:54px;display:grid;place-items:center;border-radius:17px;background:linear-gradient(135deg,#8b7cff28,#5eead41c);border:1px solid #ffffff12;font-size:25px;margin-bottom:22px}
+    .card h3{margin:0 0 9px;font-size:20px;letter-spacing:-.4px}.card p{margin:0 0 25px;color:var(--muted);font-size:14px;flex:1}
+    .action{display:inline-flex;align-items:center;justify-content:center;gap:10px;width:100%;min-height:46px;padding:12px 16px;border:0;border-radius:13px;background:linear-gradient(135deg,var(--accent),#5c83ed);color:white;text-decoration:none;font:600 14px/1.2 inherit;cursor:pointer;transition:filter .18s,transform .18s}
+    .action.secondary{background:#ffffff08;border:1px solid #ffffff1c;color:var(--text)}.action:hover{filter:brightness(1.1);transform:translateY(-1px)}.arrow{font-size:18px}
+    footer{text-align:center;color:#73819b;font-size:12px;padding:30px 10px 8px}
+    @media(max-width:640px){body{padding:18px}.topbar{margin-bottom:10px}.status{font-size:0}.status .dot{width:8px;height:8px}.hero{padding-top:42px}.cards{grid-template-columns:1fr;gap:14px}.card{min-height:230px}}
   </style>
 </head>
 <body>
-  <main class="app">
-    <header>
+  <main class="shell">
+    <header class="topbar">
       <div class="logo" aria-hidden="true">✦</div>
-      <div><h1 id="chat-title">Company Handbook Assistant</h1><p class="subtitle">Ask a question about company policies and procedures</p></div>
-      <div class="status"><span class="dot"></span> Assistant ready</div>
+      <div class="brand"><h1>HR System</h1><p>Your employee self-service workspace</p></div>
+      <div class="status"><span class="dot"></span> Portal</div>
     </header>
-    <section class="messages" id="messages" aria-live="polite">
-      <div class="welcome" id="welcome">
-        <div class="welcome-icon">💬</div>
-        <h2 id="welcome-message">How can I help you?</h2>
-        <p>Ask me about the company handbook. I’ll look for an answer using the connected workflow.</p>
-        <div class="suggestions">
-          <button class="suggestion" type="button">What is the leave policy?</button>
-          <button class="suggestion" type="button">What are the working hours?</button>
-          <button class="suggestion" type="button">How do I request a day off?</button>
-        </div>
-      </div>
+    <section class="hero">
+      <div class="eyebrow">✧ &nbsp; HUMAN RESOURCES PORTAL</div>
+      <h2>Welcome to your <span>HR workspace</span></h2>
+      <p>Choose a service below to submit a leave request or get help with HR policies and company procedures.</p>
     </section>
-    <div class="composer-wrap">
-      <form id="chat-form">
-        <textarea id="question" rows="1" placeholder="Write your question…" aria-label="Your question" required></textarea>
-        <button class="send" id="send" type="submit" aria-label="Send message">➤</button>
-      </form>
-      <p class="footnote">Powered by your n8n workflow · Verify important policy details with HR</p>
-    </div>
+    <section class="cards" aria-label="HR services">
+      <article class="card">
+        <div class="card-icon" aria-hidden="true">📅</div>
+        <h3>Leave Request</h3>
+        <p>Submit a leave request using the employee leave form and workflow.</p>
+        <a class="action" id="leave-link" href="#">Open Leave Request <span class="arrow" aria-hidden="true">→</span></a>
+      </article>
+      <article class="card">
+        <div class="card-icon" aria-hidden="true">💬</div>
+        <h3>HR Chatbot</h3>
+        <p>Ask questions about company policies, leave rules, working hours, and HR procedures.</p>
+        <a class="action secondary" id="chatbot-link" href="#">Open HR Chatbot <span class="arrow" aria-hidden="true">→</span></a>
+      </article>
+    </section>
+    <footer>HR System · Employee self-service</footer>
   </main>
-<script>
-  // Endpoint priority: value saved from settings.html, then config.js default.
-  const CONFIG = window.CHATBOT_CONFIG || {};
-  const WEBHOOK_URL = (localStorage.getItem('companyHandbookWebhookUrl') || CONFIG.webhookUrl || '').trim();
-  const REQUEST_METHOD = (CONFIG.method || 'POST').toUpperCase();
-  const INPUT_FIELD = (CONFIG.inputField || 'message').trim();
-  const REPLY_FIELD = (CONFIG.replyField || 'Response').trim();
-  document.title = CONFIG.title || document.title;
-  document.getElementById('chat-title').textContent = CONFIG.title || 'Chatbot';
-  document.getElementById('welcome-message').textContent = CONFIG.welcomeMsg || 'How can I help you?';
-
-  function inputPlaceholder() {
-    input.placeholder = CONFIG.placeholder || 'Write your question…';
-    input.setAttribute('aria-label', CONFIG.placeholder || 'Your question');
-  }
-  const messages = document.getElementById('messages');
-  const form = document.getElementById('chat-form');
-  const input = document.getElementById('question');
-  const sendButton = document.getElementById('send');
-  inputPlaceholder();
-  let welcome = document.getElementById('welcome');
-
-  function addMessage(text, role, extraClass = '') {
-    if (welcome) { welcome.remove(); welcome = null; }
-    const row = document.createElement('div');
-    row.className = `message ${role}`;
-    const avatar = document.createElement('div'); avatar.className = 'avatar'; avatar.textContent = role === 'user' ? 'You' : '✦';
-    const bubble = document.createElement('div'); bubble.className = `bubble ${extraClass}`; bubble.textContent = text;
-    row.append(avatar, bubble); messages.appendChild(row); messages.scrollTop = messages.scrollHeight;
-    return row;
-  }
-  function showTyping() {
-    const row = document.createElement('div'); row.className = 'message assistant'; row.id = 'typing-indicator';
-    const avatar = document.createElement('div'); avatar.className = 'avatar'; avatar.textContent = '✦';
-    const bubble = document.createElement('div'); bubble.className = 'bubble';
-    bubble.setAttribute('aria-label', 'Thinking...');
-    bubble.innerHTML = '<span class="thinking-label">Thinking...</span><div class="typing" aria-hidden="true"><span></span><span></span><span></span></div>';
-    row.append(avatar,bubble); messages.appendChild(row); messages.scrollTop = messages.scrollHeight; return row;
-  }
-  function extractAnswer(data) {
-    let answer = data;
-    if (data && typeof data === 'object' && REPLY_FIELD in data) answer = data[REPLY_FIELD];
-    else if (data && typeof data === 'object' && 'Response' in data) answer = data.Response;
-    else if (data && typeof data === 'object' && 'response' in data) answer = data.response;
-    else if (data && typeof data === 'object' && 'output' in data) answer = data.output;
-    if (typeof answer === 'string') {
-      const trimmed = answer.trim();
-      // Also handle a response where the Response value itself contains JSON text.
-      if ((trimmed.startsWith('{') && trimmed.endsWith('}')) || (trimmed.startsWith('"') && trimmed.endsWith('"'))) {
-        try { const parsed = JSON.parse(trimmed); if (parsed && typeof parsed === 'object' && 'Response' in parsed) return String(parsed.Response); } catch (_) {}
+  <script>
+    // Deployed HR service URLs.
+    const HR_LINKS = {
+      leaveRequestUrl: "https://script.google.com/macros/s/AKfycbws6M-pLkylo3TH_4gjlbB8h0Tova1HzLUifkHsedbMxIaYzrx4OcZyE04ENSm6URw/exec",
+      chatbotUrl: "https://lojain-ehab.github.io/RAG-HR-System/"
+    };
+    function setLink(id, url, label) {
+      const link = document.getElementById(id);
+      if (url && !url.startsWith("PASTE_")) {
+        link.href = url;
+        link.target = "_blank";
+        link.rel = "noopener noreferrer";
+      } else {
+        link.href = "#";
+        link.addEventListener("click", event => {
+          event.preventDefault();
+          alert(`Add the deployed ${label} URL in the HR_LINKS section of index.html first.`);
+        });
       }
-      return answer;
     }
-    return answer == null ? 'I received an empty response. Please try again.' : JSON.stringify(answer, null, 2);
-  }
-  async function ask(question) {
-    addMessage(question, 'user');
-    input.value = ''; input.style.height = 'auto'; sendButton.disabled = true;
-    const typing = showTyping();
-    try {
-      if (!WEBHOOK_URL) throw new Error('Webhook endpoint is not configured. Open settings.html and save your n8n endpoint.');
-      const response = await fetch(WEBHOOK_URL, {
-        method: REQUEST_METHOD,
-        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-        body: JSON.stringify({ [INPUT_FIELD]: question })
-      });
-      const raw = await response.text();
-      if (!response.ok) throw new Error(`Webhook returned HTTP ${response.status}. ${raw.slice(0, 220)}`);
-      let data;
-      try { data = JSON.parse(raw); } catch { data = raw; }
-      typing.remove();
-      addMessage(extractAnswer(data), 'assistant');
-    } catch (error) {
-      typing.remove();
-      let message = 'Could not connect to the n8n workflow. ' + (error.message || 'Please try again.');
-      if (error instanceof TypeError) message += '\n\nIf this is a CORS error, configure the n8n Webhook/Respond to Webhook response to allow requests from this page, or test the page through a local web server.';
-      addMessage(message, 'assistant', 'error');
-    } finally { sendButton.disabled = false; input.focus(); }
-  }
-  form.addEventListener('submit', event => { event.preventDefault(); const question = input.value.trim(); if (question && !sendButton.disabled) ask(question); });
-  input.addEventListener('input', () => { input.style.height = 'auto'; input.style.height = Math.min(input.scrollHeight,130) + 'px'; });
-  input.addEventListener('keydown', event => { if (event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); form.requestSubmit(); } });
-  document.querySelectorAll('.suggestion').forEach(button => button.addEventListener('click', () => { input.value = button.textContent; form.requestSubmit(); }));
-</script>
+    setLink("leave-link", HR_LINKS.leaveRequestUrl, "Leave Request");
+    setLink("chatbot-link", HR_LINKS.chatbotUrl, "HR Chatbot");
+  </script>
 </body>
 </html>
