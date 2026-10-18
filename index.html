@@ -80,3 +80,78 @@
   </script>
 </body>
 </html>
+
+HR System unified GitHub Pages site
+
+Files:
+- index.html: Main HR System page
+- chatbot.html: Task 2 HR chatbot
+- config.js: Default chatbot endpoint and settings
+- settings.html: Browser-specific chatbot settings
+
+Deployment:
+1. Upload all five files to the ROOT of the same GitHub repository.
+2. In Settings > Pages, deploy branch main and folder /(root).
+3. Open the published root URL for the HR System home page. The HR Chatbot button opens chatbot.html in this same deployment.
+4. Leave Request opens the supplied Google Apps Script URL.
+
+Important: config.js currently uses the webhook-test URL supplied for the project. Test webhooks usually work only while n8n is listening for a test event. For persistent deployment, replace webhookUrl with the n8n Production URL and activate the workflow.
+
+The settings page stores changes in the current browser only. To change defaults for all visitors, edit config.js and commit the change to GitHub.
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chatbot Settings</title>
+  <script src="config.js"></script>
+  <style>
+    :root{color-scheme:dark;--bg:#0b1020;--panel:#111a2e;--text:#edf3ff;--muted:#9baac5;--accent:#8b7cff;--line:rgba(255,255,255,.12)}
+    *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;padding:20px;background:radial-gradient(ellipse at 10% 0%,#22234e 0,transparent 45%),var(--bg);color:var(--text);font:15px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
+    main{width:min(620px,100%);padding:28px;border:1px solid var(--line);border-radius:22px;background:rgba(17,26,46,.95);box-shadow:0 25px 70px #0005}h1{font-size:24px;margin:0 0 8px}p{color:var(--muted);margin:0 0 22px}.field{margin:0 0 16px}.field-label{display:block;font-weight:600;margin:0 0 7px}input,select{width:100%;padding:12px 13px;border:1px solid var(--line);border-radius:12px;background:#0a1120;color:var(--text);font:inherit;outline:none}input:focus,select:focus{border-color:var(--accent)}.hint{font-size:12px;margin:8px 0 18px}.actions{display:flex;gap:10px;flex-wrap:wrap}button,a{border:0;border-radius:11px;padding:11px 15px;font:inherit;text-decoration:none;cursor:pointer}.primary{background:linear-gradient(135deg,#8b7cff,#5c83ed);color:white}.secondary{background:#ffffff10;color:var(--text);border:1px solid var(--line)}#status{min-height:24px;margin:15px 0 0;font-size:13px;color:#a7f3d0}.warning{color:#fcd34d;font-size:12px;margin-top:16px;margin-bottom:0}
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Chatbot Settings</h1>
+    <p>Update the chatbot settings used by this browser.</p>
+    <form id="settings-form">
+      <div class="field"><label class="field-label" for="webhookUrl">n8n Webhook URL</label><input id="webhookUrl" type="url" required placeholder="https://your-workspace.app.n8n.cloud/webhook/..." /></div>
+      <div class="field"><label class="field-label" for="title">Chat title</label><input id="title" required /></div>
+      <div class="field"><label class="field-label" for="placeholder">Input placeholder</label><input id="placeholder" required /></div>
+      <div class="field"><label class="field-label" for="welcomeMsg">Welcome message</label><input id="welcomeMsg" required /></div>
+      <div class="field"><label class="field-label" for="messageField">Request message field</label><input id="messageField" required /><p class="hint">Must match the field name your n8n workflow expects. Default: Message</p></div>
+      <div class="field"><label class="field-label" for="replyField">Response field</label><input id="replyField" required /><p class="hint">Must match the response key returned by n8n. Default: Response</p></div>
+      <div class="field"><label class="field-label" for="method">Request method</label><select id="method"><option value="POST">POST</option><option value="GET">GET</option></select></div>
+      <div class="actions"><button class="primary" type="submit">Save settings</button><button class="secondary" type="button" id="reset">Reset defaults</button><a class="secondary" href="chatbot.html">Open chatbot</a><a class="secondary" href="index.html">HR System Home</a></div>
+      <div id="status" role="status" aria-live="polite"></div>
+    </form>
+    <p class="warning">Saved settings are stored in this browser only. They do not edit the files on GitHub or automatically update settings for other users. To change the default settings for everyone, edit config.js and publish the updated file.</p>
+  </main>
+  <script>
+    const defaults = { ...(window.CHATBOT_CONFIG || {}) };
+    const storageKey = 'companyHandbookConfigOverrides';
+    const status = document.getElementById('status');
+    const fields = ['webhookUrl','title','placeholder','welcomeMsg','messageField','replyField','method'];
+    function readSaved() { try { return JSON.parse(localStorage.getItem(storageKey) || '{}'); } catch (_) { return {}; } }
+    function fillForm(values) { fields.forEach(key => { document.getElementById(key).value = values[key] ?? defaults[key] ?? ''; }); }
+    fillForm({ ...defaults, ...readSaved() });
+    document.getElementById('settings-form').addEventListener('submit', event => {
+      event.preventDefault();
+      const values = {};
+      fields.forEach(key => values[key] = document.getElementById(key).value.trim());
+      try { const url = new URL(values.webhookUrl); if (!['https:', 'http:'].includes(url.protocol)) throw new Error(); }
+      catch (_) { status.style.color = '#fecaca'; status.textContent = 'Please enter a valid HTTP or HTTPS Webhook URL.'; return; }
+      if (!values.messageField || !values.replyField) { status.style.color = '#fecaca'; status.textContent = 'Message field and response field cannot be empty.'; return; }
+      localStorage.setItem(storageKey, JSON.stringify(values));
+      localStorage.removeItem('companyHandbookWebhookUrl');
+      status.style.color = '#a7f3d0'; status.textContent = 'Settings saved in this browser. Open the chatbot to test them.';
+    });
+    document.getElementById('reset').addEventListener('click', () => {
+      localStorage.removeItem(storageKey); localStorage.removeItem('companyHandbookWebhookUrl'); fillForm(defaults);
+      status.style.color = '#a7f3d0'; status.textContent = 'Default settings restored for this browser.';
+    });
+  </script>
+</body>
+</html>
