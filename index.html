@@ -81,24 +81,6 @@
 </body>
 </html>
 
-HR System unified GitHub Pages site
-
-Files:
-- index.html: Main HR System page
-- chatbot.html: Task 2 HR chatbot
-- config.js: Default chatbot endpoint and settings
-- settings.html: Browser-specific chatbot settings
-
-Deployment:
-1. Upload all five files to the ROOT of the same GitHub repository.
-2. In Settings > Pages, deploy branch main and folder /(root).
-3. Open the published root URL for the HR System home page. The HR Chatbot button opens chatbot.html in this same deployment.
-4. Leave Request opens the supplied Google Apps Script URL.
-
-Important: config.js currently uses the webhook-test URL supplied for the project. Test webhooks usually work only while n8n is listening for a test event. For persistent deployment, replace webhookUrl with the n8n Production URL and activate the workflow.
-
-The settings page stores changes in the current browser only. To change defaults for all visitors, edit config.js and commit the change to GitHub.
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
